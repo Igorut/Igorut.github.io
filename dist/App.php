@@ -39,7 +39,7 @@ class App extends FillTables
         return $information;
     }
 
-    public function buildDB($numberOfStaff)
+    public function buildDB(int $numberOfStaff): void
     {
         $this->createDB();
         $this->createTableDepartments();
