@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="utf-8">
-
     <style>
         table {
             font-size: 14px;
@@ -30,11 +29,8 @@
             background: #D8E6F3;
         }
     </style>
-
 </head>
 <body>
-
-
 <form action="" method="post">
     <div>
         <?php $buildBtn = new \App\App();
@@ -50,7 +46,6 @@
         <input type="submit" name="get_staff" value="Вывести сотрудников">
     </div>
 </form>
-
 <table>
     <tr>
         <th>Инициалы</th>
