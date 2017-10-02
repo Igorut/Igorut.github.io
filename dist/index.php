@@ -28,6 +28,10 @@
         td {
             background: #D8E6F3;
         }
+
+        .manager td {
+            background: gold;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +60,7 @@
         <th>Руководитель отдела</th>
     </tr>
     <?php foreach ($information as $info): ?>
-        <tr>
+        <tr class="<?php echo $info['manager_name'] === $info['surname'] ? 'manager' : '' ?>">
             <td><?php echo $info['initials'] ?></td>
             <td><?php echo $info['surname'] ?></td>
             <td><?php echo $info['age'] ?></td>

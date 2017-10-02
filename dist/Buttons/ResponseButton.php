@@ -6,7 +6,7 @@
  * Time: 21:47
  */
 
-namespace Buttons;
+namespace App\Buttons;
 
 trait ResponseButton
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace DB;
+namespace App\DB;
 
-use DB\Params\Params;
+use App\DB\Params\Params;
 use PDO;
 
 /**

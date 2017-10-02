@@ -2,24 +2,23 @@
 
 namespace App;
 
-use Buttons\BuildButton;
-use Buttons\ResponseButton;
-use DataBaseQueries\CreateDB;
-use DataBaseQueries\CreateTable;
-use DataBaseQueries\FillTables;
+use App\Buttons\BuildButton;
+use App\Buttons\ResponseButton;
+use App\DataBaseQueries\CreateDB;
+use App\DataBaseQueries\CreateTable;
+use App\DataBaseQueries\FillTables;
 
-require_once 'autoload.php';
+require_once '../vendor/autoload.php';
 
 class App extends FillTables
 {
     use CreateDB, CreateTable, BuildButton, ResponseButton;
 
-    public function getPersonal($numberOfGet): array
+    public function getPersonal(int $numberOfGet): array
     {
         $results = $this->connection->query('SELECT staff.initials, staff.surname,
-                        staff.age, staff.date_of_birth,
-                        staff.head_of_department AS manager, departments.name AS department,
-                        departments.id AS department_id ,  departments.manager_name
+                        staff.age, staff.date_of_birth, departments.name AS department,
+                        departments.manager_name
                         FROM departments 
                         INNER JOIN linktable 
                         ON departments.id = linktable.department_id
@@ -40,7 +39,7 @@ class App extends FillTables
         return $information;
     }
 
-    public function buildDB($numberOfStaff): void
+    public function buildDB($numberOfStaff)
     {
         $this->createDB();
         $this->createTableDepartments();

@@ -6,7 +6,7 @@
  * Time: 22:59
  */
 
-namespace DB\Params;
+namespace App\DB\Params;
 
 
 trait Params

@@ -6,9 +6,9 @@
  * Time: 23:36
  */
 
-namespace DataBaseQueries;
+namespace App\DataBaseQueries;
 
-use DB\Params\Params;
+use App\DB\Params\Params;
 use PDO;
 
 trait CreateDB

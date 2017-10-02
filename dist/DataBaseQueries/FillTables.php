@@ -6,32 +6,35 @@
  * Time: 17:08
  */
 
-namespace DataBaseQueries;
+namespace App\DataBaseQueries;
 
-use RandomGenerator\RandomGenerator;
+use App\Generators\Random\RandomGenerator;
+use PDO;
 
 class FillTables extends RandomGenerator
 {
-    public function fillTableStaff($numberOfStaff)
+    public function fillTableStaff(int $numberOfStaff): void
     {
         /**
          * Fill table staff with a random data
-         * @var $shuffled
+         * @var $shuffledDepartmentIds
          * @var $surname
          * @var $headOfDepartment
+         * @var $shuffledSurnames
          * @var $departmentId
          * @return void
          */
-        $shuffled = $this->department->getShuffledIds();
+        $shuffledDepartmentIds = $this->department->getShuffledIds();
+        $shuffledSurnames = $this->surname->shuffle();
         for ($i = 1; $i <= $numberOfStaff; $i++) {
-            $surname = $this->surname->getSurname();
-            $headOfDepartment = count($shuffled) < 1
+            $surname = $this->surname->get($shuffledSurnames[random_int(0, count($shuffledSurnames) - 1)]);
+            $headOfDepartment = count($shuffledDepartmentIds) < 1
                 ? 0
-                : random_int(0, 3) === 1
+                : random_int(0, 5) === 1
                     ? 1
                     : 0;
             if ($headOfDepartment) {
-                $departmentId = array_shift($shuffled);
+                $departmentId = array_shift($shuffledDepartmentIds);
                 $this->createUserStaff($surname, $headOfDepartment);
                 $this->fillLinkTable($departmentId);
                 $this->addManager($surname, $departmentId);
@@ -41,49 +44,59 @@ class FillTables extends RandomGenerator
         }
     }
 
-    private function newStaff($surname)
+    private function newStaff(string $surname): void
     {
         $this->createUserStaff($surname);
         $this->fillLinkTable();
     }
 
-    private function createUserStaff($surname, $headOfDepartment = 0)
+    private function createUserStaff(string $surname, $headOfDepartment = 0): void
     {
         /**
          * Add one employee
          * @return void
          */
-        $initials = $this->randomInitials();
         $dateOfBirth = $this->randomDate();
-        $age = $this->age->getAge($dateOfBirth);
-        $this->connection->exec("INSERT INTO `staff` (`initials`, `surname`, `age`, `date_of_birth`, `head_of_department`)
-                VALUES ( '$initials' ,  '$surname' ,  '$age' ,
-                '$dateOfBirth' ,  '$headOfDepartment' )");
+        $query = $this->connection->prepare('
+                INSERT INTO staff (initials, surname, age, date_of_birth, head_of_department)
+                VALUES ( :initials ,  :surname ,  :age ,
+                :dateOfBirth ,  :headOfDepartment )');
+        $query->bindValue(':initials', $this->randomInitials());
+        $query->bindParam(':surname', $surname, PDO::PARAM_STR, 55);
+        $query->bindValue(':age', $this->age->getAge($dateOfBirth), PDO::PARAM_INT);
+        $query->bindParam(':dateOfBirth', $dateOfBirth);
+        $query->bindParam(':headOfDepartment', $headOfDepartment, PDO::PARAM_INT);
+        $query->execute();
     }
 
-    private function addManager($managerSurname, $departmentId)
+    private function addManager(string $managerSurname, int $departmentId): void
     {
         /**
-         * Add manager surname into table `departments`
+         * Add manager surname into table departments
          * @return void
          */
-        $this->connection->exec("UPDATE departments SET `manager_name` = '$managerSurname' WHERE `id` = $departmentId ");
+        $query = $this->connection->prepare('UPDATE departments SET manager_name = :managerSurname 
+                                                      WHERE id = :departmentId ');
+        $query->bindParam(':managerSurname', $managerSurname, PDO::PARAM_STR, 55);
+        $query->bindParam(':departmentId', $departmentId, PDO::PARAM_INT);
+        $query->execute();
     }
 
-    public function fillTableDepartments()
+    public function fillTableDepartments(): void
     {
         /**
-         * Fill in the `departments` table with departments
+         * Fill in the departments table with departments
          * @return void
          */
         $listOfDepartments = $this->department->getList();
         for ($i = 0; $i < $this->department->getCount(); $i++) {
-            $this->connection->exec("INSERT INTO departments (name) 
-                  VALUES ( '$listOfDepartments[$i]' )");
+            $query = $this->connection->prepare('INSERT INTO departments (name) VALUES ( :listOfDepartments )');
+            $query->bindParam(':listOfDepartments', $listOfDepartments[$i], PDO::PARAM_STR, 55);
+            $query->execute();
         }
     }
 
-    private function fillLinkTable($departmentIdWithManager = false)
+    private function fillLinkTable(int $departmentIdWithManager = null): void
     {
         /**
          * Fill the table with links
@@ -91,12 +104,15 @@ class FillTables extends RandomGenerator
          * @return void
          */
         if ($departmentIdWithManager) {
-            $this->connection->exec("INSERT INTO `linktable` (`department_id`) 
-                  VALUES ( '$departmentIdWithManager' )");
+            $query = $this->connection->prepare('INSERT INTO linktable (department_id) 
+                  VALUES ( :departmentIdWithManager )');
+            $query->bindParam(':departmentIdWithManager', $departmentIdWithManager, PDO::PARAM_INT);
+            $query->execute();
         } else {
-            $departmentId = random_int(0, $this->department->getCount() - 1);
-            $this->connection->exec("INSERT INTO `linktable` (`department_id`) 
-                  VALUES ( '$departmentId' )");
+            $query = $this->connection->prepare('INSERT INTO linktable (department_id) 
+                  VALUES ( :departmentId )');
+            $query->bindValue(':departmentId', random_int(0, $this->department->getCount() - 1), PDO::PARAM_INT);
+            $query->execute();
         }
     }
 }
