@@ -1,0 +1,22 @@
+{
+  "name": "igorut/test-app",
+  "description": "Random_Database_Data_Generator",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Igorut",
+      "email": "sla6843@yandex.ru"
+    }
+  ],
+
+  "require": {
+
+  },
+
+  "autoload": {
+      "psr-4": {
+        "App\\": "dist/"
+      }
+  }
+}
