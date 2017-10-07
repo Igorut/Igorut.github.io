@@ -10,7 +10,7 @@ use DateTime;
  * Date: 29.09.2017
  * Time: 22:04
  */
-class DateGenerator
+class Generator
 {
     private $operator;
     private $number;

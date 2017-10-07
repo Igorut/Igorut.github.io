@@ -8,7 +8,7 @@ namespace App\Generators\Surname;
  * Date: 30.09.2017
  * Time: 9:55
  */
-class SurnameGenerator
+class Generator
 {
     private $surnames;
 

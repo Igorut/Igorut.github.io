@@ -8,7 +8,7 @@ namespace App\Generators\Department;
  * Date: 30.09.2017
  * Time: 14:46
  */
-class DepartmentGenerator
+class Generator
 {
     private $departments;
 

@@ -2,10 +2,10 @@
 
 namespace App\Generators\Random;
 
-use App\Generators\Department\DepartmentGenerator;
-use App\Generators\Date\DateGenerator;
-use App\Generators\Surname\SurnameGenerator;
-use App\Generators\Age\AgeGenerator;
+use App\Generators\Department\Generator as DepartmentGenerator;
+use App\Generators\Date\Generator as DateGenerator;
+use App\Generators\Surname\Generator as SurnameGenerator;
+use App\Generators\Age\Generator as AgeGenerator;
 use App\DB\Database;
 
 /**

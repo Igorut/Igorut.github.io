@@ -2,7 +2,7 @@
 
 namespace App\Generators\Age;
 
-use App\Generators\Date\DateGenerator;
+use App\Generators\Date\Generator as DateGenerator;
 use DateTime;
 
 /**
@@ -11,7 +11,7 @@ use DateTime;
  * Date: 30.09.2017
  * Time: 10:53
  */
-class AgeGenerator extends DateGenerator
+class Generator extends DateGenerator
 {
     public function getAge($dateOfBirth): int
     {
